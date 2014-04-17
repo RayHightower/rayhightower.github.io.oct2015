@@ -54,23 +54,14 @@ Here's how memoization is implemented in the Fibonacci example:
 # Fibonacci numbers WITH memoization.
 
 # Initialize the memoization array.
-@scratchpad = []
-@max_fibo_size = 50
-(1..@max_fibo_size).each do |i|
-  @scratchpad[i] = :notcalculated
-end
+@fibos = Array.new
 
 # Calculate the nth Fibonacci number, f(n).
 def fibo (n)
-  if n > @max_fibo_size
-    return "n must be #{@max_fibo_size} or less."
-  elsif n <= 1
-    return n
-  elsif @scratchpad[n] != :notcalculated
-    return @scratchpad[n]
+  if n <= 1
+    n
   else
-    @scratchpad[n] = fibo(n-1) + fibo(n-2)
-    return @scratchpad[n]
+    @fibos[n] ||= (fibo(n-1) + fibo(n-2))
   end
 end
 
@@ -80,9 +71,9 @@ end
 end
 ```
 
-Walking through the code... First we create a memoization array, a place to store the pre-calculated values. In this example, `@scratchpad[]` serves as our memoization array.
+Walking through the code... First we create a memoization array, a place to store the values which have before been calculated. In this example, `@fibos` serves as our memoization array.
 
-The `fibo(n)` method is similar to the one in the earlier example, with a few subtle differences. First, we need to determine whether we've already calculated a particular value. Since we initialized all elements of the `@scratchpad` array with the `:notcalculated` symbol, it's easy to figure out where work needs to be done. If a Fibonacci number `fibo(n)` has already been calculated, we return the value stored at `@scratchpad[n]`. Otherwise, we calculate the new `fibo(n)` and store that value at `@scratchpad[n]` for later use.
+The `fibo(n)` method is similar to the one in the earlier example, with a few subtle differences. First, we need to determine whether we've already calculated a particular value. Since all values of `@fibos` are initially `nil` (the default when the key does not exist), it's easy to figure out where work needs to be done. If a Fibonacci number `fibo(n)` has already been calculated, we return the value stored at `@fibos[n]`. Otherwise, we calculate the new `fibo(n)` and store that value at `@fibos[n]` for later use.
 
 ###Performance Comparison
 The performance of the two programs is compared in this 1-minute video.
